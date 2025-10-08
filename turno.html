@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyn Iturriza - Salón de Belleza</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<!-- Firebase SDK -->
+<script type="module">
+  // Importar librerías de Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  
+  const firebaseConfig = {
+  apiKey: "AIzaSyDanr5jf5gJDJ-4XjLrWJZRrpvJgZ4oR-g",
+  authDomain: "espacio-belleza-cyn-9ac1e.firebaseapp.com",
+  projectId: "espacio-belleza-cyn-9ac1e",
+  storageBucket: "espacio-belleza-cyn-9ac1e.firebasestorage.app",
+  messagingSenderId: "261129332365",
+  appId: "1:261129332365:web:7afd5e9b77ee354ac724c4",
+  measurementId: "G-REP11RK7F3"
+};
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Guardar turno en Firebase
+  document.getElementById("turnoForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById("nombre").value;
+    const telefono = document.getElementById("telefono").value;
+    const email = document.getElementById("email").value;
+    const fecha = document.getElementById("fecha").value;
+    const hora = document.getElementById("hora").value;
+      const servicio = document.getElementById("servicio").value;
+
+    try {
+        await addDoc(collection(db, "turnos"), { nombre, telefono, email, fecha, hora, servicio });
+      alert("✅ Turno generado con exito!");
+      mostrarTurnos();
+      e.target.reset();
+    } catch (err) {
+      console.error("Error al guardar turno:", err);
+    }
+  });
+
+  // Mostrar turnos desde Firebase
+  async function mostrarTurnos() {
+    const lista = document.getElementById("listaTurnos");
+    lista.innerHTML = "";
+    const querySnapshot = await getDocs(collection(db, "turnos"));
+    querySnapshot.forEach((doc) => {
+      const t = doc.data();
+      const li = document.createElement("li");
+        li.textContent = `${t.nombre} - ${t.telefono} - ${t.servicio} - ${t.fecha} a las ${t.hora}`;
+      lista.appendChild(li);
+    });
+  }
+
+  // Cargar turnos al iniciar
+  mostrarTurnos();
+</script>
+
+<body>
+
+  <header>
+  <div class="logo-container">
+    <a href="index.html">
+      <img src="/imagenes/logo-Photoroom.png" alt="Logo" class="imagen" width="220" height="200">
+    </a>
+  </div>
+    <nav class="main-nav">
+      <a href="index.html#servicios">Servicios</a>
+      <a href="index.html#quienes">Quiénes Somos</a>
+      <a href="index.html#contacto">Contactos</a>
+      <a href="reclamos.html">Reclamos</a>
+    </nav>
+  </header>
+  
+  <main>
+<h2>Generador de Turnos</h2>
+
+<form id="turnoForm">
+  <div>
+    <label for="nombre">Nombre del Cliente:</label>
+    <input type="text" id="nombre" autocomplete="name" required>
+  </div>
+  <div>
+    <label for="telefono">Número de Teléfono:</label>
+    <input type="tel" id="telefono" autocomplete="tel" required>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" autocomplete="email" required placeholder="ejemplo@mail.com">
+  </div>
+  <div>
+    <label for="servicio">Tipo de Servicio:</label>
+    <select id="servicio" required>
+      <option value="">Seleccione un servicio</option>
+      <option value="Manicura">Manicura</option>
+      <option value="Depilación">Depilación</option>
+      <option value="Maquillaje">Maquillaje</option>
+    </select>
+  </div>
+  <div>
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" required>
+  </div>
+  <div>
+    <label for="hora">Hora:</label>
+    <select id="hora" required>
+      <option value="">Seleccione una hora</option>
+    </select>
+  </div>
+  <button type="submit">📅 Reservar Turno</button>
+</form>
+
+<div id="mensajeTurno" style="display:none; margin: 15px 0; padding: 14px 18px; background: linear-gradient(90deg,#e6ffe6 70%,#c6f7d4 100%); color: #207520; border-radius: 8px; font-weight: 500; font-size: 1.15em; box-shadow: 0 2px 8px rgba(32,117,32,0.08); transition: opacity 0.5s; align-items: center; gap: 10px; display: flex;"><span style="font-size:1.5em;">✅</span> <span id="mensajeTexto"></span></div>
+
+</main>
+
+
+
+    <footer>
+    <p>&copy; 2025 Veliz Leandro & Maidana Mauro. Todos los derechos reservados.</p>
+    <p>
+      <a href="https://www.instagram.com/espaciodebelleza.cyn?utm_source=qr&igsh=YWdtM3RicmJkdnVt" style="color:#fff"><i class="fab fa-instagram"></i> Instagram</a> |
+      <a href="#" style="color:#fff"><i class="fab fa-facebook"></i> Facebook</a> |
+    </p>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  </footer>
+
+  <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Flatpickr Español -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>

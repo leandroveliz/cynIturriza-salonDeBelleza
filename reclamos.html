@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyn Iturriza - Salón de Belleza</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDanr5jf5gJDJ-4XjLrWJZRrpvJgZ4oR-g",
+    authDomain: "espacio-belleza-cyn-9ac1e.firebaseapp.com",
+    projectId: "espacio-belleza-cyn-9ac1e",
+    storageBucket: "espacio-belleza-cyn-9ac1e.firebasestorage.app",
+    messagingSenderId: "261129332365",
+    appId: "1:261129332365:web:7afd5e9b77ee354ac724c4",
+    measurementId: "G-REP11RK7F3"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const formReclamo = document.getElementById("formReclamo");
+    if (formReclamo) {
+      formReclamo.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        // Tomar los valores directamente de los inputs
+        const nombre = document.getElementById("nombreReclamo").value;
+        const telefono = document.getElementById("telefonoReclamo").value;
+        const email = document.getElementById("emailReclamo").value;
+        const detalle = document.getElementById("detalleReclamo").value;
+        let imagen = "";
+        const imagenInput = document.getElementById("imagenReclamo");
+        if (imagenInput && imagenInput.files.length > 0) {
+          imagen = imagenInput.files[0].name;
+        }
+        try {
+          // Generar número de reclamo único (timestamp + 4 dígitos aleatorios)
+          const numeroReclamo = `R${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
+          await addDoc(collection(db, "reclamos"), { nombre, telefono, email, detalle, imagen, fecha: new Date().toISOString(), numeroReclamo });
+          const mensaje = document.getElementById("mensajeReclamo");
+          mensaje.textContent = `¡Reclamo enviado y guardado! Nº: ${numeroReclamo}. Gracias, ${nombre}.`;
+          mensaje.style.display = "block";
+          formReclamo.reset();
+        } catch (err) {
+          alert("Error al guardar el reclamo. Intente nuevamente.");
+        }
+      });
+    }
+  });
+</script>
+
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="index.html">
+        <img src="/imagenes/logo-Photoroom.png" alt="Logo" class="imagen" width="220" height="200">
+      </a>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html#servicios">Servicios</a>
+      <a href="index.html#quienes">Quiénes Somos</a>
+      <a href="index.html#contacto">Contactos</a>
+      <a href="turno.html">Reserva de Turno</a>
+    </nav>
+  </header>
+  <main>
+    <section id="reclamos" style="margin:40px 0;">
+      <h2>Formulario de Reclamos</h2>
+      <form id="formReclamo" style="max-width:400px;margin:auto;display:flex;flex-direction:column;gap:15px;">
+        <label for="nombreReclamo">Nombre:</label>
+        <input type="text" id="nombreReclamo" name="nombreReclamo" required>
+        <label for="telefonoReclamo">Teléfono:</label>
+        <input type="tel" id="telefonoReclamo" name="telefonoReclamo" required pattern="[0-9\s\-()+]+" placeholder="Ej: 381 1234567">
+        <label for="emailReclamo">Email:</label>
+        <input type="email" id="emailReclamo" name="emailReclamo" required>
+        <label for="detalleReclamo">Detalle del reclamo:</label>
+        <textarea id="detalleReclamo" name="detalleReclamo" rows="4" required placeholder="Describa su reclamo"></textarea>
+        <label for="imagenReclamo">Adjuntar imagen (opcional):</label>
+        <input type="file" id="imagenReclamo" name="imagenReclamo" accept="image/*">
+        <span id="nombreImagen" style="font-size:13px;color:#555;"></span>
+        <button type="submit">Enviar Reclamo</button>
+      </form>
+      <div id="mensajeReclamo" style="display:none;margin-top:15px;padding:10px;background:#ffe6e6;color:#a00;border-radius:6px;font-weight:500;"></div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 Veliz Leandro & Maidana Mauro. Todos los derechos reservados.</p>
+    <p>
+      <a href="https://www.instagram.com/espaciodebelleza.cyn?utm_source=qr&igsh=YWdtM3RicmJkdnVt" style="color:#fff"><i class="fab fa-instagram"></i> Instagram</a> |
+      <a href="#" style="color:#fff"><i class="fab fa-facebook"></i> Facebook</a> |
+    </p>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  </footer>
+  <script>
+    const formReclamo = document.getElementById("formReclamo");
+    const imagenInput = document.getElementById("imagenReclamo");
+    const nombreImagen = document.getElementById("nombreImagen");
+    if (imagenInput) {
+      imagenInput.addEventListener("change", function() {
+        if (imagenInput.files.length > 0) {
+          nombreImagen.textContent = `Archivo seleccionado: ${imagenInput.files[0].name}`;
+        } else {
+          nombreImagen.textContent = "";
+        }
+      });
+    }
+    // El submit asíncrono ya está arriba, no duplicar lógica aquí
+  </script>
+</body>
+</html>
