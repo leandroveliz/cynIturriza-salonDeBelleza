@@ -18,7 +18,7 @@
     </div>
     <nav class="main-nav">
       <a href="index.html#servicios">Servicios</a>
-      <a href="index.html#quienes">Quiénes Somos</a>
+    <script type="module" src="script.js"></script>
       <a href="index.html#contacto">Contactos</a>
       <a href="reclamos.html">Reclamos</a>
     </nav>
@@ -28,6 +28,7 @@
   <section class="hero">
     <h2>Tu belleza, nuestro arte</h2>
     <a href="turno.html">Reservar Ahora</a>
+    <a href="cancelarturno.html">Cancelar Turno</a>
   </section>
 
   <section id="servicios">
@@ -132,18 +133,20 @@
     <p>📍 Barrio Virgen del Huerto Mza G Casa 8 - Villa Mariano Moreno</p>
     <p>📞 (381) 5769010 </p>
      <p><a href="https://wa.me/5493815767145?text=Hola%20quiero%20realizar%20una%20consulta%20en%20Espacio%20Belleza%20Cyn" target="_blank" style="color:#25d366;text-decoration:none;font-weight:bold;"><i class="fab fa-whatsapp"></i> WhatsApp: +54 9 381 5767145</a></p>
+  
+  </section>
+  <section>
     <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3562.7628030817514!2d-65.19738889999999!3d-26.7519444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDQ1JzA3LjAiUyA2NcKwMTEnNTAuNiJX!5e0!3m2!1ses!2sar!4v1759363374774!5m2!1ses!2sar" width="550" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </section>
-
   <section id="newsletter" style="background:#fff0f6;padding:3rem 2rem;text-align:center;">
   <h2>💌 Suscribite </h2>
   <p>Recibí promociones y novedades exclusivas del salón</p>
-  <form id="formNewsletter" style="max-width:400px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;">
-    <input type="email" id="emailNewsletter" placeholder="Tu correo electrónico" required
+  <form id="formNewsletterInline" style="max-width:400px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;">
+    <input type="email" id="emailNewsletterInline" placeholder="Tu correo electrónico" required
            style="flex:1;padding:12px 16px;border-radius:8px;border:1.5px solid #e83e8c;font-size:1em;">
     <button type="submit" style="background:#e83e8c;color:#fff;padding:12px 24px;border:none;border-radius:8px;font-size:1em;cursor:pointer;">Suscribirme</button>
   </form>
-  <div id="mensajeNewsletter" style="display:none;margin-top:10px;color:#207520;font-weight:bold;">¡Gracias por suscribirte! 💕</div>
+  <div id="mensajeNewsletterInline" style="display:none;margin-top:10px;color:#207520;font-weight:bold;">¡Gracias por suscribirte! 💕</div>
   </section>
   <!-- 🔹 Newsletter Popup (versión final y mejorada) -->
 <div id="newsletterPopup" style="
@@ -204,8 +207,8 @@
       Recibí <strong>descuentos exclusivos</strong> y las últimas <strong>novedades</strong> de nuestro salón de belleza.
     </p>
 
-    <form id="formNewsletter" style="margin-top:20px;">
-      <input type="email" id="emailNewsletter" placeholder="Tu correo electrónico" required
+    <form id="formNewsletterPopup" style="margin-top:20px;">
+      <input type="email" id="emailNewsletterPopup" placeholder="Tu correo electrónico" required
              style="width:100%;padding:12px 16px;border-radius:8px;border:1.5px solid #e83e8c;font-size:1em;">
       <button type="submit" style="
         margin-top:12px;
@@ -223,7 +226,7 @@
       </button>
     </form>
 
-    <div id="mensajeNewsletter" style="display:none;margin-top:15px;font-weight:bold;"></div>
+    <div id="mensajeNewsletterPopup" style="display:none;margin-top:15px;font-weight:bold;"></div>
   </div>
 </div>
 
@@ -248,18 +251,34 @@
 
   const popup = document.getElementById("newsletterPopup");
   const popupContent = document.getElementById("popupContent");
-  const mensaje = document.getElementById("mensajeNewsletter");
-  const formNewsletter = document.getElementById("formNewsletter");
+  const mensajePopup = document.getElementById("mensajeNewsletterPopup");
+  const mensajeInline = document.getElementById("mensajeNewsletterInline");
+  const formNewsletterPopup = document.getElementById("formNewsletterPopup");
+  const formNewsletterInline = document.getElementById("formNewsletterInline");
 
-  // 🎬 Mostrar popup solo si el usuario no se suscribió antes
-  window.addEventListener("load", () => {
-    const suscripto = localStorage.getItem("suscriptoNewsletter");
-    if (!suscripto) {
-      setTimeout(() => {
-        popup.style.visibility = "visible";
-        popup.style.opacity = "1";
-        popupContent.style.transform = "scale(1)";
-      }, 2000);
+  // 🎬 Mostrar popup solo si el usuario no se suscribió antes.
+  // Comprobamos primero si hay un email guardado en localStorage y lo verificamos en Firestore.
+  window.addEventListener("load", async () => {
+    const savedEmail = localStorage.getItem("suscriptoNewsletterEmail");
+    if (savedEmail) {
+      try {
+        const existe = await verificarEmailExistente(savedEmail);
+        if (!existe) {
+          // si guardado localmente pero no en Firestore, mostrar popup
+          setTimeout(() => mostrarPopup(), 500);
+        } else {
+          // ya suscripto en la base; no mostrar popup
+          // opcional: mostrar mensaje inline
+          mensajeInline.textContent = "¡Ya estás suscripto!";
+          mensajeInline.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error verificando subscripción local:', err);
+        setTimeout(() => mostrarPopup(), 500);
+      }
+    } else {
+      // si no hay email guardado, mostrar popup
+      setTimeout(() => mostrarPopup(), 2000);
     }
   });
 
@@ -277,18 +296,21 @@
     return !querySnapshot.empty; // true si ya existe
   }
 
-  // 💾 Guardar suscripción en Firebase
-  formNewsletter.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("emailNewsletter").value.trim();
-    mensaje.style.display = "none";
+  function mostrarPopup() {
+    popup.style.visibility = "visible";
+    popup.style.opacity = "1";
+    popupContent.style.transform = "scale(1)";
+  }
 
+  // 💾 Guardar suscripción en Firebase (común para popup e inline)
+  async function guardarSuscripcion(email, mensajeElem, hidePopupAfter = false, formElem = null) {
+    mensajeElem.style.display = 'none';
     try {
       const existe = await verificarEmailExistente(email);
       if (existe) {
-        mensaje.textContent = "⚠️ Este correo ya está registrado en nuestro Newsletter.";
-        mensaje.style.color = "#e67e22";
-        mensaje.style.display = "block";
+        mensajeElem.textContent = "⚠️ Este correo ya está registrado en nuestro Newsletter.";
+        mensajeElem.style.color = "#e67e22";
+        mensajeElem.style.display = "block";
         return;
       }
 
@@ -297,36 +319,52 @@
         fecha: new Date().toISOString()
       });
 
-      mensaje.textContent = "✅ ¡Gracias por suscribirte! 💕";
-      mensaje.style.display = "block";
-      mensaje.style.color = "#207520";
-      formNewsletter.reset();
+      mensajeElem.textContent = "✅ ¡Gracias por suscribirte! 💕";
+      mensajeElem.style.display = "block";
+      mensajeElem.style.color = "#207520";
+      if (formElem) formElem.reset();
 
-      // Guardar estado local
-      localStorage.setItem("suscriptoNewsletter", "true");
+      // Guardar email local para futuras comprobaciones
+      localStorage.setItem("suscriptoNewsletterEmail", email);
 
-      // Ocultar popup después de unos segundos
-      setTimeout(() => {
-        popup.style.opacity = "0";
-        popupContent.style.transform = "scale(0.9)";
-        setTimeout(() => popup.style.visibility = "hidden", 400);
-      }, 3000);
+      if (hidePopupAfter) {
+        setTimeout(() => {
+          popup.style.opacity = "0";
+          popupContent.style.transform = "scale(0.9)";
+          setTimeout(() => popup.style.visibility = "hidden", 400);
+        }, 1500);
+      }
 
     } catch (error) {
       console.error("Error al guardar correo:", error);
-      mensaje.textContent = "❌ Error al suscribirte. Intenta nuevamente.";
-      mensaje.style.color = "#a00";
-      mensaje.style.display = "block";
+      mensajeElem.textContent = "❌ Error al suscribirte. Intenta nuevamente.";
+      mensajeElem.style.color = "#a00";
+      mensajeElem.style.display = "block";
     }
-  });
+  }
+
+  // Conectar formularios
+  if (formNewsletterPopup) {
+    formNewsletterPopup.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('emailNewsletterPopup').value.trim();
+      await guardarSuscripcion(email, mensajePopup, true, formNewsletterPopup);
+    });
+  }
+  if (formNewsletterInline) {
+    formNewsletterInline.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('emailNewsletterInline').value.trim();
+      await guardarSuscripcion(email, mensajeInline, false, formNewsletterInline);
+    });
+  }
 </script>
 
 
   <footer>
     <p>&copy; 2025 Veliz Leandro & Maidana Mauro. Todos los derechos reservados.</p>
     <p>
-      <a href="https://www.instagram.com/espaciodebelleza.cyn?utm_source=qr&igsh=YWdtM3RicmJkdnVt"><i class="fab fa-instagram"></i> Instagram</a> |
-      <a href="#"><i class="fab fa-facebook"></i> Facebook</a> 
+      <a href="https://www.instagram.com/espaciodebelleza.cyn?utm_source=qr&igsh=YWdtM3RicmJkdnVt"><i class="fab fa-instagram"></i> Instagram</a> 
     </p>
   </footer>
 

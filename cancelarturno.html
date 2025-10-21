@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cancelar Turno - Espacio Belleza Cyn</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Flatpickr CSS (para selector de fecha igual a turno.html) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="index.html"><img src="./imagenes/logo-Photoroom.png" alt="Logo" class="imagen" width="120" height="120"></a>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html#servicios">Servicios</a>
+      <a href="index.html#quienes">Quiénes Somos</a>
+      <a href="index.html#contacto">Contactos</a>
+      <a href="reclamos.html">Reclamos</a>
+      <a href="turno.html">Reserva de Turno</a>
+    </nav>
+  </header>
+
+  <main style="padding:40px 16px;text-align:center;">
+    <h2>Cancelar Turno</h2>
+    <p>Completa los datos del turno que querés cancelar. Nuestro equipo validará la solicitud y te confirmará por email.</p>
+
+    <form id="cancelForm" style="max-width:480px;margin:20px auto;display:flex;flex-direction:column;gap:12px;">
+      <input type="email" id="cancelEmail" placeholder="Tu email" required style="padding:10px;border-radius:8px;border:1px solid #ddd;">
+      <input type="date" id="cancelFecha" required style="padding:10px;border-radius:8px;border:1px solid #ddd;">
+      <select id="cancelHora" required style="padding:10px;border-radius:8px;border:1px solid #ddd;">
+        <option value="">Seleccione hora</option>
+        <option>09:00</option>
+        <option>10:00</option>
+        <option>11:00</option>
+        <option>12:00</option>
+        <option>13:00</option>
+        <option>14:00</option>
+        <option>15:00</option>
+        <option>16:00</option>
+        <option>17:00</option>
+        <option>18:00</option>
+        <option>19:00</option>
+        <option>20:00</option>
+      </select>
+  <button type="submit">Solicitar Cancelación</button>
+    </form>
+
+    <div id="cancelMsg" style="display:none;margin-top:16px;font-weight:600;color:#207520;">Solicitud enviada. Te contactaremos al email indicado.</div>
+  </main>
+
+  <footer style="text-align:center;padding:24px;">
+    <p>&copy; 2025 Veliz Leandro & Maidana Mauro. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    document.getElementById('cancelForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      // Aquí sólo se muestra un mensaje; la implementación real de cancelación debe interactuar con la base
+      document.getElementById('cancelMsg').style.display = 'block';
+      setTimeout(()=>{ document.getElementById('cancelMsg').style.display='none'; }, 6000);
+      this.reset();
+    });
+  </script>
+  <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Flatpickr Español -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  <script>
+    // Inicializar Flatpickr en el input de cancelación para mantener mismo diseño/UX que turno.html
+    document.addEventListener('DOMContentLoaded', function(){
+      const cancelFecha = document.getElementById('cancelFecha');
+      if (cancelFecha) {
+        flatpickr(cancelFecha, {
+          dateFormat: 'd-m-Y',
+          minDate: 'today',
+          disable: [function(date) { return (date.getDay() === 0); }], // bloquear domingos
+          locale: {
+            ...flatpickr.l10ns.es,
+            firstDayOfWeek: 1
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

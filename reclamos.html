@@ -9,7 +9,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDanr5jf5gJDJ-4XjLrWJZRrpvJgZ4oR-g",
@@ -39,8 +39,11 @@
           imagen = imagenInput.files[0].name;
         }
         try {
-          // Generar número de reclamo único (timestamp + 4 dígitos aleatorios)
-          const numeroReclamo = `R${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
+          // Generar número de reclamo secuencial con 6 dígitos: R000001, R000002, ...
+          // Contamos documentos existentes en la colección y asignamos count+1
+          const snapshot = await getDocs(collection(db, "reclamos"));
+          const nextNumber = snapshot.size + 1;
+          const numeroReclamo = `R${String(nextNumber).padStart(6, '0')}`;
           await addDoc(collection(db, "reclamos"), { nombre, telefono, email, detalle, imagen, fecha: new Date().toISOString(), numeroReclamo });
           const mensaje = document.getElementById("mensajeReclamo");
           mensaje.textContent = `¡Reclamo enviado y guardado! Nº: ${numeroReclamo}. Gracias, ${nombre}.`;
