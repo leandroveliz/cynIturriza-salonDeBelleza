@@ -57,6 +57,54 @@
     cursor: pointer;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
+/* Nav responsive: hide/show links on small screens */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    width: 100%;
+    justify-content: center; /* centrar las opciones en pantallas grandes */
+}
+.main-nav .nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+.main-nav .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .main-nav { justify-content: flex-end; }
+    .main-nav .nav-toggle { display: block; }
+    .main-nav .nav-links {
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: calc(100% + 8px);
+        background: linear-gradient(90deg, #e83e8c 0%, #7c3fa6 100%);
+        padding: 10px;
+        border-radius: 10px;
+        flex-direction: column;
+        min-width: 160px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        z-index: 50;
+    }
+    .main-nav .nav-links a {
+        display: block;
+        margin: 6px 0;
+    }
+    .main-nav .nav-links.show {
+        display: flex;
+    }
+}
 .main-nav a:hover, nav.main-nav a:hover, .navbar-nav a:hover {
     background: linear-gradient(90deg, #e83e8c 0%, #7c3fa6 100%);
     color: #fff !important;
@@ -154,6 +202,14 @@ footer a {
 footer a:hover {
     text-decoration: underline;
     color: #fff !important;
+}
+/* Hacer iframe del mapa responsive */
+section iframe {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    border: 0;
 }
 
 form {

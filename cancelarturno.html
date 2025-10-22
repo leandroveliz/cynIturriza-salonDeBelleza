@@ -14,11 +14,14 @@
       <a href="index.html"><img src="./imagenes/logo-Photoroom.png" alt="Logo" class="imagen" width="120" height="120"></a>
     </div>
     <nav class="main-nav">
-      <a href="index.html#servicios">Servicios</a>
-      <a href="index.html#quienes">Quiénes Somos</a>
-      <a href="index.html#contacto">Contactos</a>
-      <a href="reclamos.html">Reclamos</a>
-      <a href="turno.html">Reserva de Turno</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <div class="nav-links">
+        <a href="index.html#servicios">Servicios</a>
+        <a href="index.html#quienes">Quiénes Somos</a>
+        <a href="index.html#contacto">Contactos</a>
+        <a href="reclamos.html">Reclamos</a>
+        <a href="turno.html">Reserva de Turno</a>
+      </div>
     </nav>
   </header>
 
@@ -87,5 +90,15 @@
       }
     });
   </script>
+    <script>
+      // Toggle para nav responsive
+      document.addEventListener('DOMContentLoaded', function(){
+        const toggle = document.querySelector('.main-nav .nav-toggle');
+        const links = document.querySelector('.main-nav .nav-links');
+        if (toggle && links) {
+          toggle.addEventListener('click', () => links.classList.toggle('show'));
+        }
+      });
+    </script>
 </body>
 </html>

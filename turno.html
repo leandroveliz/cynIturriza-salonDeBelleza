@@ -19,11 +19,14 @@
     </a>
   </div>
     <nav class="main-nav">
-      <a href="index.html#servicios">Servicios</a>
-      <a href="index.html#quienes">Quiénes Somos</a>
-      <a href="index.html#contacto">Contactos</a>
-      <a href="reclamos.html">Reclamos</a>
-      <a href="cancelarturno.html">Cancelar Turno</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <div class="nav-links">
+        <a href="index.html#servicios">Servicios</a>
+        <a href="index.html#quienes">Quiénes Somos</a>
+        <a href="index.html#contacto">Contactos</a>
+        <a href="reclamos.html">Reclamos</a>
+        <a href="cancelarturno.html">Cancelar Turno</a>
+      </div>
     </nav>
   </header>
   
@@ -84,6 +87,16 @@
   <!-- Flatpickr Español -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
   <script type="module" src="script.js"></script>
+  <script>
+    // Toggle simple para el nav responsive
+    document.addEventListener('DOMContentLoaded', function(){
+      const toggle = document.querySelector('.main-nav .nav-toggle');
+      const links = document.querySelector('.main-nav .nav-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', () => links.classList.toggle('show'));
+      }
+    });
+  </script>
 
 </body>
 </html>

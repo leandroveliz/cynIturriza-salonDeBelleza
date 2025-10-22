@@ -1,6 +1,6 @@
 // Módulo principal: carrusel, turnos y Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDanr5jf5gJDJ-4XjLrWJZRrpvJgZ4oR-g",
@@ -12,7 +12,13 @@ const firebaseConfig = {
   measurementId: "G-REP11RK7F3"
 };
 
-const app = initializeApp(firebaseConfig);
+// Evitar re-inicializar la app si ya fue creada en otra página/script
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 const db = getFirestore(app);
 
 // Carrusel de testimonios en index.html

@@ -65,12 +65,14 @@
       </a>
     </div>
     <nav class="main-nav">
-      <a href="index.html#servicios">Servicios</a>
-      <a href="index.html#quienes">Quiénes Somos</a>
-      <a href="index.html#contacto">Contactos</a>
-      <a href="turno.html">Reserva de Turno</a>
-      <a href="cancelarturno.html">Cancelar Turno</a>
-
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <div class="nav-links">
+        <a href="index.html#servicios">Servicios</a>
+        <a href="index.html#quienes">Quiénes Somos</a>
+        <a href="index.html#contacto">Contactos</a>
+        <a href="turno.html">Reserva de Turno</a>
+        <a href="cancelarturno.html">Cancelar Turno</a>
+      </div>
     </nav>
   </header>
   <main>
@@ -114,6 +116,15 @@
       });
     }
     // El submit asíncrono ya está arriba, no duplicar lógica aquí
+  </script>
+  <script type="module" src="script.js"></script>
+  <script>
+    // Toggle nav responsive
+    document.addEventListener('DOMContentLoaded', function(){
+      const toggle = document.querySelector('.main-nav .nav-toggle');
+      const links = document.querySelector('.main-nav .nav-links');
+      if (toggle && links) toggle.addEventListener('click', () => links.classList.toggle('show'));
+    });
   </script>
 </body>
 </html>
