@@ -212,6 +212,40 @@ section iframe {
     border: 0;
 }
 
+/* Estilos específicos para el mapa: en escritorio limitar ancho y altura para que no se vea gigante */
+.map {
+    width: 100%;
+    max-width: 720px; /* ancho deseado en PC */
+    height: 480px;    /* altura cómoda para escritorio */
+    border: 0;
+    display: block;
+    margin: 0 auto; /* centrar */
+}
+
+@media (max-width: 900px) {
+    .map {
+        height: 420px;
+        max-width: 640px;
+    }
+}
+
+@media (max-width: 600px) {
+    .map {
+        width: 100%;
+        height: 360px;
+        max-width: none;
+    }
+}
+
+/* Leyenda para el mapa */
+.leyenda-mapa {
+    max-width: 800px;
+    margin: 12px auto 0 auto;
+    color: #555;
+    font-size: 0.98rem;
+    line-height: 1.4;
+}
+
 form {
     background: #fff;
     padding: 30px 40px;
